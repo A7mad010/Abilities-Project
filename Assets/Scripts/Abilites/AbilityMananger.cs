@@ -1,21 +1,29 @@
 using UnityEngine;
 
+/// <summary>
+/// ability controle , you can add any type of ability
+/// </summary>
 public class AbilityMananger : MonoBehaviour
 {
-    [SerializeField] MonoBehaviour abilityComponent;
-    private IAbility m_ability;
+    [SerializeField] AbilityBase[] abilities;
 
-    private void Start()
+    private void Update()
     {
-        m_ability = abilityComponent as IAbility;
+        HandleAbilities();
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// press number of ability from array to use it
+    /// </summary>
+    void HandleAbilities()
     {
-        if(Input.GetKey(KeyCode.Space))
+        for(int i = 0; i < abilities.Length;i++)
         {
-            m_ability.UseAbility();
+            if(Input.GetKeyDown(KeyCode.Alpha1 + i))
+            {
+                Debug.Log(i);
+                abilities[i].Activate();
+            }
         }
     }
 }

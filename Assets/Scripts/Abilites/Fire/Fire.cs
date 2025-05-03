@@ -1,68 +1,66 @@
-using NUnit.Framework;
-using System;
 using UnityEngine;
 
-public class Fire : MonoBehaviour , IAbility
+/// <summary>
+/// Allows you to shoot
+/// </summary>
+public class Fire : AbilityBase
 {
-    [Header("Refrence")]
-    [SerializeField] Transform centerTransform;
-    [SerializeField] Ammo fireObject;
-
-    [Header("Settings")]
-    [SerializeField] float rayCastDestinace;
-    [SerializeField] float coolDown = 1;
-    float m_lastTime;
-
-    RaycastHit m_rayCastHit;
+    [Header("Reference")]
+    [SerializeField] Transform shootCenter; //The point from which the ammunition will originate
+    [SerializeField] GameObject ammoObj; //The ammunition object
 
     private void Start()
     {
-        IsValid();
+        Initialize("Fire", 2, 25);
     }
 
-    public void UseAbility()
+    /// <summary>
+    /// add detials on ability then use it
+    /// </summary>
+    protected override void UseAbility()
     {
-        if ((Time.time - m_lastTime) < coolDown) return;
+        if (IsValid() == false) return;
 
-        ApplyRayCastPoint();
-        ApplyFire();
-
-        m_lastTime = Time.time;
+        CreateOneFire();
     }
 
-    private void ApplyRayCastPoint()
+    /// <summary>
+    /// Create ammo
+    /// </summary>
+    private void CreateOneFire()
     {
-        bool isHit = Physics.Raycast(centerTransform.position, centerTransform.forward, out m_rayCastHit, rayCastDestinace);
+        GameObject fire = Instantiate(ammoObj);
+        fire.transform.position = shootCenter.position;
+        fire.transform.rotation = shootCenter.rotation;
     }
 
-    private void ApplyFire()
+    /// <summary>
+    /// Cheack there was not any null reference 
+    /// </summary>
+    /// <returns></returns>
+    private bool IsValid()
     {
-        ReUseAmmo(m_rayCastHit.point);
-    }
+        string errorMassage = "";
 
-    private void ReUseAmmo(Vector3 point)
-    {
-        fireObject.transform.position = point;
-        fireObject.Play();
-    }
-
-    private void IsValid()
-    {
-        string errorDebug = "";
-
-        if (centerTransform == null)
+        if(shootCenter == null)
         {
-            errorDebug += $"{this.name} : null > cannot find the ( {centerTransform} ) \n";
-        }
-        if (fireObject == null)
-        {
-            errorDebug += $"{this.name} : null > cannot find the ( {fireObject} ) \n";
+            errorMassage += $"{this.name} : {shootCenter.name} is null \n";
         }
 
-        if (errorDebug != "")
+        if (ammoObj == null)
         {
-            Debug.Log(errorDebug);
-            enabled = false;
+            errorMassage += $"{this.name} : {ammoObj.name} is null \n";
+        }
+
+        if(errorMassage != "")
+        {
+            Debug.LogError(errorMassage);
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
+
 }
