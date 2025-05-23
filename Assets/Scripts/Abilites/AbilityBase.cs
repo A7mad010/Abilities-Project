@@ -10,6 +10,8 @@ public abstract class AbilityBase : MonoBehaviour, IAbility
     public float CoolDown { get; private set; }
     public float Damage { get; private set; }
 
+    public event Action OnAbilityActive;
+
     /// <summary>
     /// save time (last time you use the ability)
     /// </summary>
@@ -45,6 +47,7 @@ public abstract class AbilityBase : MonoBehaviour, IAbility
         }
 
         UseAbility();
+        OnAbilityActive?.Invoke();
         m_coolDownLastTime = Time.time;
     }
 
@@ -54,15 +57,7 @@ public abstract class AbilityBase : MonoBehaviour, IAbility
     /// <returns></returns>
     protected bool IsCoolDownEnd()
     {
-        if (Time.time - m_coolDownLastTime < CoolDown)
-        {
-            Debug.Log($"Cool Down : {Time.time - m_coolDownLastTime}");
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return Time.time - m_coolDownLastTime < CoolDown;
     }
 
     /// <summary>

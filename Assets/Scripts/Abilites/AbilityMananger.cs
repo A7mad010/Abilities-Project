@@ -5,6 +5,7 @@ using UnityEngine;
 /// </summary>
 public class AbilityMananger : MonoBehaviour
 {
+    [Header("Reference")]
     [SerializeField] AbilityBase[] abilities;
 
     private void Update()

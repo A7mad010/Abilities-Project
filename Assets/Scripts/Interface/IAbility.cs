@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -19,6 +20,15 @@ public interface IAbility
     /// get damge of the ability
     /// </summary>
     float Damage { get; }
+
+    /// <summary>
+    /// Event when you use ability
+    /// 
+    /// <note>
+    ///  Q : what i mean about (Action) 
+    /// > Action is delegate type</note>
+    /// </summary>
+    event Action OnAbilityActive;
 
     /// <summary>
     /// Activeate the ability
